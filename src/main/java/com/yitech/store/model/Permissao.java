@@ -17,7 +17,7 @@ public class Permissao implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	private String nome;
 
 	public Long getCodigo() {

@@ -7,6 +7,7 @@ import java.util.List;
 import com.yitech.store.model.Grupo;
 
 public class UsuarioFilter {
+
 	private String nome;
 	private String email;
 	private List<Grupo> grupos;
@@ -34,4 +35,5 @@ public class UsuarioFilter {
 	public void setGrupos(List<Grupo> grupos) {
 		this.grupos = grupos;
 	}
+
 }

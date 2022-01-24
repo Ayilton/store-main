@@ -6,9 +6,9 @@ public class ValorItensEstoque {
 
 	private BigDecimal valor;
 	private Long totalItens;
-	
+
 	public ValorItensEstoque() {
-		
+
 	}
 
 	public ValorItensEstoque(BigDecimal valor, Long totalItens) {
@@ -31,5 +31,5 @@ public class ValorItensEstoque {
 	public void setTotalItens(Long totalItens) {
 		this.totalItens = totalItens;
 	}
-	
+
 }

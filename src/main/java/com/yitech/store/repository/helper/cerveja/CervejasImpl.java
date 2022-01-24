@@ -23,49 +23,46 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public class CervejasImpl  implements CervejasQueries {
+public class CervejasImpl implements CervejasQueries {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Autowired
 	private PaginacaoUtil paginacaoUtil;
-	
+
 	@Autowired
 	private FotoStorage fotoStorage;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Cerveja> filtrar(CervejaFilter filtro, Pageable pageable) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
-		
+
 		paginacaoUtil.preparar(criteria, pageable);
 		adicionarFiltro(filtro, criteria);
-		
+
 		return new PageImpl<>(criteria.list(), pageable, total(filtro));
 	}
 
+	@Override
+	public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
+		String jpql = "select new com.yitech.store.dto.CervejaDTO(codigo, sku, nome, origem, valor, foto) "
+				+ "from Cerveja where lower(sku) like lower(:skuOuNome) or lower(nome) like lower(:skuOuNome)";
+		List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
+				.setParameter("skuOuNome", skuOuNome + "%")
+				.getResultList();
+		cervejasFiltradas.forEach(c -> c.setUrlThumbnailFoto(fotoStorage.getUrl(FotoStorage.THUMBNAIL_PREFIX + c.getFoto())));
+		return cervejasFiltradas;
+	}
 
-
-
-@Override
-public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
-	String jpql = "select new com.yitech.store.dto.CervejaDTO(codigo, sku, nome, origem, valor, foto) "
-			+ "from Cerveja where lower(sku) like lower(:skuOuNome) or lower(nome) like lower(:skuOuNome)";
-	List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
-			.setParameter("skuOuNome", skuOuNome + "%")
-			.getResultList();
-	cervejasFiltradas.forEach(c -> c.setUrlThumbnailFoto(fotoStorage.getUrl(FotoStorage.THUMBNAIL_PREFIX + c.getFoto())));
-	return cervejasFiltradas;
-}
-	
 	@Override
 	public ValorItensEstoque valorItensEstoque() {
 		String query = "select new com.yitech.store.dto.ValorItensEstoque(sum(valor * quantidadeEstoque), sum(quantidadeEstoque)) from Cerveja";
 		return manager.createQuery(query, ValorItensEstoque.class).getSingleResult();
 	}
-	
+
 	private Long total(CervejaFilter filtro) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
 		adicionarFiltro(filtro, criteria);
@@ -78,7 +75,7 @@ public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
 			if (!StringUtils.isEmpty(filtro.getSku())) {
 				criteria.add(Restrictions.eq("sku", filtro.getSku()));
 			}
-			
+
 			if (!StringUtils.isEmpty(filtro.getNome())) {
 				criteria.add(Restrictions.ilike("nome", filtro.getNome(), MatchMode.ANYWHERE));
 			}
@@ -104,19 +101,9 @@ public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
 			}
 		}
 	}
-	
+
 	private boolean isEstiloPresente(CervejaFilter filtro) {
 		return filtro.getEstilo() != null && filtro.getEstilo().getCodigo() != null;
 	}
-
-
-	public List<Produtos> estoquePorProduto(){
-
-
-		List<Produtos> produtos = manager.createNamedQuery("estoque.porProduto").getResultList();
-		return produtos;
-	}
-
-
 
 }

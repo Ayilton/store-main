@@ -2,8 +2,8 @@ package com.yitech.store.model;
 
 public enum StatusVenda {
 
-	ORCAMENTO("Orçamento"), 
-	EMITIDA("Emitida"), 
+	ORCAMENTO("Orçamento"),
+	EMITIDA("Emitida"),
 	CANCELADA("Cancelada");
 
 	private String descricao;

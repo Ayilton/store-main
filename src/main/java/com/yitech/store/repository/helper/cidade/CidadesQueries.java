@@ -11,5 +11,5 @@ import com.yitech.store.repository.filter.CidadeFilter;
 public interface CidadesQueries {
 
 	public Page<Cidade> filtrar(CidadeFilter filtro, Pageable pageable);
-	
+
 }

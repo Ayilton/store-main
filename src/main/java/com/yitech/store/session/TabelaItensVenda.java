@@ -11,11 +11,11 @@ import java.util.stream.IntStream;
 import com.yitech.store.model.Cerveja;
 import com.yitech.store.model.ItemVenda;
 
-class TabelaItensVenda {
+public  class TabelaItensVenda {
 
 	private String uuid;
 	private List<ItemVenda> itens = new ArrayList<>();
-	
+
 	public TabelaItensVenda(String uuid) {
 		this.uuid = uuid;
 	}
@@ -26,35 +26,105 @@ class TabelaItensVenda {
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 	}
-	
+
 	public void adicionarItem(Cerveja cerveja, Integer quantidade) {
 		Optional<ItemVenda> itemVendaOptional = buscarItemPorCerveja(cerveja);
-		
+
 		ItemVenda itemVenda = null;
-		if (itemVendaOptional.isPresent()) {
-			itemVenda = itemVendaOptional.get();
-			itemVenda.setQuantidade(itemVenda.getQuantidade() + quantidade);
+		boolean findProduct = false;
+
+		if (itens.isEmpty()){
+
+			System.out.println("No empty");
+			itemVenda = new ItemVenda();
+			itemVenda.setCerveja(cerveja);
+			itemVenda.setQuantidade(0);
+			itemVenda.setValorUnitario(cerveja.getValor());
+			itens.add(0, itemVenda);
+			System.out.println(itens.size());
+			System.out.println(itemVendaOptional.isPresent());
+
+		}
+		Cerveja cervejaEncontrada= null;
+		for(int i=0;i<=itens.size()-1;i++){
+
+			if(itens.get(i).getCerveja().getCodigo().equals(cerveja.getCodigo())){
+
+				findProduct=true;
+				cervejaEncontrada = itens.get(i).getCerveja();
+
+
+			}}
+
+		System.out.println(findProduct);
+		if(findProduct==true){
+
+
+			for(int i=0;i<=itens.size()-1;i++){
+
+				if(itens.get(i).getCerveja().getCodigo()==cervejaEncontrada.getCodigo()){
+
+					itens.get(i).setQuantidade(itens.get(i).getQuantidade() + quantidade);
+
+				}
+			}
+
+
+
+			findProduct=false;
 		} else {
+
+			System.out.println("No else");
 			itemVenda = new ItemVenda();
 			itemVenda.setCerveja(cerveja);
 			itemVenda.setQuantidade(quantidade);
 			itemVenda.setValorUnitario(cerveja.getValor());
 			itens.add(0, itemVenda);
+			System.out.println(itens.size());
+			System.out.println(itemVendaOptional.isPresent());
 		}
+
+
+
+		/*if (itemVendaOptional.isPresent()) {
+			System.out.println("Item existe");
+			itemVenda = itemVendaOptional.get();
+			itemVenda.setQuantidade(itemVenda.getQuantidade() + quantidade);
+		} else {
+
+			System.out.println("Somente a adicionar");
+			itemVenda = new ItemVenda();
+			itemVenda.setCerveja(cerveja);
+			itemVenda.setQuantidade(quantidade);
+			itemVenda.setValorUnitario(cerveja.getValor());
+			itens.add(0, itemVenda);
+			System.out.println(itens.size());
+			System.out.println(itemVendaOptional.isPresent());
+		}*/
 	}
-	
+
 	public void alterarQuantidadeItens(Cerveja cerveja, Integer quantidade) {
-		ItemVenda itemVenda = buscarItemPorCerveja(cerveja).get();
-		itemVenda.setQuantidade(quantidade);
+		//ItemVenda itemVenda = buscarItemPorCerveja(cerveja).get();
+		for(int i=0;i<=itens.size()-1;i++){
+
+			if(itens.get(i).getCerveja().getCodigo().equals(cerveja.getCodigo())){
+
+
+				itens.get(i).setQuantidade(quantidade);
+
+			}};
+
+
+
 	}
-	
+
 	public void excluirItem(Cerveja cerveja) {
 		int indice = IntStream.range(0, itens.size())
 				.filter(i -> itens.get(i).getCerveja().equals(cerveja))
 				.findAny().getAsInt();
 		itens.remove(indice);
 	}
-	
+
 	public int total() {
 		return itens.size();
 	}
@@ -62,8 +132,10 @@ class TabelaItensVenda {
 	public List<ItemVenda> getItens() {
 		return itens;
 	}
-	
+
 	private Optional<ItemVenda> buscarItemPorCerveja(Cerveja cerveja) {
+
+
 		return itens.stream()
 				.filter(i -> i.getCerveja().equals(cerveja))
 				.findAny();
@@ -97,5 +169,5 @@ class TabelaItensVenda {
 			return false;
 		return true;
 	}
-	
+
 }

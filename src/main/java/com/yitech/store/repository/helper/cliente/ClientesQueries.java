@@ -11,5 +11,5 @@ import com.yitech.store.repository.filter.ClienteFilter;
 public interface ClientesQueries {
 
 	public Page<Cliente> filtrar(ClienteFilter filtro, Pageable pageable);
-	
+
 }

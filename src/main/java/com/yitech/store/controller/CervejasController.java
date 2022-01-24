@@ -32,13 +32,13 @@ import com.yitech.store.service.exception.ImpossivelExcluirEntidadeException;
 @Controller
 @RequestMapping("/cervejas")
 public class CervejasController {
-	
+
 	@Autowired
 	private Estilos estilos;
-	
+
 	@Autowired
 	private CadastroCervejaService cadastroCervejaService;
-	
+
 	@Autowired
 	private Cervejas cervejas;
 
@@ -50,18 +50,18 @@ public class CervejasController {
 		mv.addObject("origens", Origem.values());
 		return mv;
 	}
-	
+
 	@RequestMapping(value = { "/nova", "{\\d+}" }, method = RequestMethod.POST)
 	public ModelAndView salvar(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes attributes) {
 		if (result.hasErrors()) {
 			return nova(cerveja);
 		}
-		
+
 		cadastroCervejaService.salvar(cerveja);
 		attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso!");
 		return new ModelAndView("redirect:/cervejas/nova");
 	}
-	
+
 	@GetMapping
 	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result
 			, @PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest) {
@@ -69,20 +69,17 @@ public class CervejasController {
 		mv.addObject("estilos", estilos.findAll());
 		mv.addObject("sabores", Sabor.values());
 		mv.addObject("origens", Origem.values());
-		
+
 		PageWrapper<Cerveja> paginaWrapper = new PageWrapper<>(cervejas.filtrar(cervejaFilter, pageable)
 				, httpServletRequest);
 		mv.addObject("pagina", paginaWrapper);
 		return mv;
 	}
-
-	@GetMapping("/filtro/{skuOuNome}")
-	public @ResponseBody List<CervejaDTO> pesquisar(@PathVariable("skuOuNome") String skuOuNome) {
-		return cervejas.porSkuOuNome(skuOuNome);
-	}
-
-
-
+	/**
+	 @RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	 public @ResponseBody List<CervejaDTO> pesquisar(String skuOuNome) {
+	 return cervejas.porSkuOuNome(skuOuNome);
+	 }*/
 
 	@DeleteMapping("/{codigo}")
 	public @ResponseBody ResponseEntity<?> excluir(@PathVariable("codigo") Cerveja cerveja) {
@@ -93,7 +90,7 @@ public class CervejasController {
 		}
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable("codigo") Cerveja cerveja) {
 		ModelAndView mv = nova(cerveja);
@@ -101,14 +98,11 @@ public class CervejasController {
 		return mv;
 	}
 
+	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<CervejaDTO> pesquisar(String skuOuNome){
 
 
-	@GetMapping("/estoquePorProduto")
-	public @ResponseBody List<Produtos> listarEstoquePorProduto(){
-
-
-		return cervejas.estoquePorProduto();
+		return cervejas.porSkuOuNome(skuOuNome);
 	}
 
-	
 }

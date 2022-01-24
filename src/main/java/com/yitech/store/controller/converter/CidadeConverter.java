@@ -18,7 +18,7 @@ public class CidadeConverter implements Converter<String, Cidade> {
 			cidade.setCodigo(Long.valueOf(codigo));
 			return cidade;
 		}
-		
+
 		return null;
 	}
 

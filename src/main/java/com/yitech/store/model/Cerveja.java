@@ -31,7 +31,6 @@ import com.yitech.store.repository.listener.CervejaEntityListener;
 import com.yitech.store.validation.SKU;
 
 
-
 @EntityListeners(CervejaEntityListener.class)
 @Entity
 @Table(name = "cerveja")
@@ -55,32 +54,33 @@ public class Cerveja implements Serializable {
 	private String descricao;
 
 	@NotNull(message = "Valor é obrigatório")
-	@DecimalMin(value = "0.50", message = "O valor do produto deve ser maior que $0,50")
-	@DecimalMax(value = "9999999.99", message = "O valor do produto deve ser menor que $9.999.999,99")
+	@DecimalMin(value = "0.50", message = "O valor da cerveja deve ser maior que R$0,50")
+	@DecimalMax(value = "9999999.99", message = "O valor da cerveja deve ser menor que R$9.999.999,99")
 	private BigDecimal valor;
 
-	@NotNull(message = "O codigo de barras e obrigatorio")
+	@NotNull(message = "O teor alcóolico é obrigatório")
+	@DecimalMax(value = "100.0", message = "O valor do teor alcóolico deve ser menor que 100")
 	@Column(name = "teor_alcoolico")
 	private BigDecimal teorAlcoolico;
 
 	@NotNull(message = "A comissão é obrigatória")
-
+	@DecimalMax(value = "100.0", message = "A comissão deve ser igual ou menor que 100")
 	private BigDecimal comissao;
 
 	@NotNull(message = "A quantidade em estoque é obrigatória")
-
+	@Max(value = 9999, message = "A quantidade em estoque deve ser menor que 9.999")
 	@Column(name = "quantidade_estoque")
 	private Integer quantidadeEstoque;
 
-
+	@NotNull(message = "A origem é obrigatória")
 	@Enumerated(EnumType.STRING)
 	private Origem origem;
 
-	@NotNull(message = "O tipo é obrigatório")
+	@NotNull(message = "O sabor é obrigatório")
 	@Enumerated(EnumType.STRING)
 	private Sabor sabor;
 
-	@NotNull(message = "A categoria e obrigatoria")
+	@NotNull(message = "O estilo é obrigatório")
 	@ManyToOne
 	@JoinColumn(name = "codigo_estilo")
 	private Estilo estilo;
@@ -104,7 +104,7 @@ public class Cerveja implements Serializable {
 	private void prePersistUpdate() {
 		sku = sku.toUpperCase();
 	}
-	
+
 	public String getSku() {
 		return sku;
 	}
@@ -254,7 +254,7 @@ public class Cerveja implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {	
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

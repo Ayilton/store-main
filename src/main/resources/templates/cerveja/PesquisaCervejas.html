@@ -112,8 +112,8 @@ Pesquisa de Produtos
 				<tbody>
 				<tr th:each="cerveja : ${pagina.conteudo}">
 					<td class="text-center">
-						 <img th:src="@{/fotos/thumbnail.{foto}(foto=${cerveja.fotoOuMock})}" class="img-responsive"/>
-					<!--	<img th:src="${cerveja.getUrlFoto()}" class="img-responsive"/>-->
+						<img th:src="@{/fotos/thumbnail.{foto}(foto=${cerveja.fotoOuMock})}" class="img-responsive"/>
+						<!--	<img th:src="${cerveja.getUrlFoto()}" class="img-responsive"/>-->
 
 					</td>
 					<td class="text-center" th:text="${cerveja.sku}">AA1234</td>
@@ -146,4 +146,4 @@ Pesquisa de Produtos
 
 </section>
 </body>
-</html>
+</html>s

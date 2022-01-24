@@ -20,6 +20,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.yitech.store.model.validation.group.CnpjGroup;
+import com.yitech.store.model.validation.group.CpfGroup;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 import org.hibernate.validator.group.GroupSequenceProvider;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,8 +49,8 @@ public class Cliente implements Serializable {
 	private TipoPessoa tipoPessoa;
 
 	@NotBlank(message = "CPF/CNPJ é obrigatório")
-//	@CPF(groups = CpfGroup.class)
-	//@CNPJ(groups = CnpjGroup.class)
+	@CPF(groups = CpfGroup.class)
+	@CNPJ(groups = CnpjGroup.class)
 	@Column(name = "cpf_cnpj")
 	private String cpfOuCnpj;
 
@@ -58,12 +62,12 @@ public class Cliente implements Serializable {
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
-	
+
 	@PrePersist @PreUpdate
 	private void prePersistPreUpdate() {
 		this.cpfOuCnpj = TipoPessoa.removerFormatacao(this.cpfOuCnpj);
 	}
-	
+
 	@PostLoad
 	private void postLoad() {
 		this.cpfOuCnpj = this.tipoPessoa.formatar(this.cpfOuCnpj);
@@ -124,7 +128,7 @@ public class Cliente implements Serializable {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-	
+
 	public String getCpfOuCnpjSemFormatacao() {
 		return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
 	}

@@ -12,22 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class StoreApplication {
+
 	private static ApplicationContext APPLICATION_CONTEXT;
-	
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("PUT","POST","GET");
-			}
-		};
-	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(StoreApplication.class, args);
-		
-		
+		APPLICATION_CONTEXT = SpringApplication.run(StoreApplication.class, args);
+	}
+
+	public static <T> T getBean(Class<T> requiredType) {
+		return APPLICATION_CONTEXT.getBean(requiredType);
 	}
 	
 

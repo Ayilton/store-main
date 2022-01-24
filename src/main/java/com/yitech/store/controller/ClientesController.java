@@ -36,13 +36,13 @@ public class ClientesController {
 
 	@Autowired
 	private Estados estados;
-	
+
 	@Autowired
 	private CadastroClienteService cadastroClienteService;
-	
+
 	@Autowired
 	private Clientes clientes;
-	
+
 	@RequestMapping("/novo")
 	public ModelAndView novo(Cliente cliente) {
 		ModelAndView mv = new ModelAndView("cliente/CadastroCliente");
@@ -50,36 +50,36 @@ public class ClientesController {
 		mv.addObject("estados", estados.findAll());
 		return mv;
 	}
-	
+
 	@PostMapping("/novo")
 	public ModelAndView salvar(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes) {
 		if (result.hasErrors()) {
 			return novo(cliente);
 		}
-		
+
 		try {
 			cadastroClienteService.salvar(cliente);
 		} catch (CpfCnpjClienteJaCadastradoException e) {
 			result.rejectValue("cpfOuCnpj", e.getMessage(), e.getMessage());
 			return novo(cliente);
 		}
-		
+
 		attributes.addFlashAttribute("mensagem", "Cliente salvo com sucesso!");
 		return new ModelAndView("redirect:/clientes/novo");
 	}
-	
+
 	@GetMapping
 	public ModelAndView pesquisar(ClienteFilter clienteFilter, BindingResult result
 			, @PageableDefault(size = 3) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("cliente/PesquisaClientes");
 		mv.addObject("tiposPessoa", TipoPessoa.values());
-		
+
 		PageWrapper<Cliente> paginaWrapper = new PageWrapper<>(clientes.filtrar(clienteFilter, pageable)
 				, httpServletRequest);
 		mv.addObject("pagina", paginaWrapper);
 		return mv;
 	}
-	
+
 	@RequestMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody List<Cliente> pesquisar(String nome) {
 		validarTamanhoNome(nome);
@@ -91,10 +91,10 @@ public class ClientesController {
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Void> tratarIllegalArgumentException(IllegalArgumentException e) {
 		return ResponseEntity.badRequest().build();
 	}
-	
+
 }

@@ -11,7 +11,8 @@ import com.yitech.store.repository.filter.EstiloFilter;
 
 
 public interface EstilosQueries {
-	
+
 	public Page<Estilo> filtrar(EstiloFilter filtro, Pageable pageable);
-	
+
 }
+

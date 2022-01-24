@@ -19,7 +19,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-10">
-					<h1 th:if="${venda.nova}" th:text="#{venda.cadastro.titulo}">Cadastro de venda</h1>
+					<h1 th:if="${venda.nova}" th:text="#{venda.cadastro.titulo}">Registo de venda</h1>
 					<h1 th:unless="${venda.nova}" th:text="#{venda.edicao.titulo(${venda.codigo})}">Edição da venda nº </h1>
 				</div>
 			</div>
@@ -40,7 +40,8 @@
 						<div class="aw-box__icon">
 							<i class="fa  fa-usd  fa-3x"></i>
 						</div>
-						<div class="aw-box__value">R$<span class="js-valor-total-box" th:text="${{venda.valorTotal}}">0,00</span></div>
+						<div class="aw-box__value">$<span class="js-valor-total-box" th:text="${{venda.valorTotal}}">0,00</span></div>
+						<input type="hidden" th:value="${venda.valorTotal}" id="valorTotalInput" >
 						<div class="aw-box__title">Total</div>
 					</div>
 				</div>
@@ -89,7 +90,7 @@
 				<div class="form-group  col-sm-4">
 					<label class="control-label" for="valorFrete">Valor do frete</label>
 					<div class="input-group">
-						<div class="input-group-addon">R$</div>
+						<div class="input-group-addon">$</div>
 						<input type="text" maxlength="14" class="form-control  js-decimal" id="valorFrete"
 							   th:field="*{valorFrete}" data:valor="${valorFrete}" th:disabled="${venda.salvarProibido}"/>
 					</div>
@@ -98,7 +99,7 @@
 				<div class="form-group  col-sm-4">
 					<label class="control-label" for="valorDesconto">Valor do desconto</label>
 					<div class="input-group">
-						<div class="input-group-addon">R$</div>
+						<div class="input-group-addon">$</div>
 						<input type="text" maxlength="14" class="form-control  js-decimal" id="valorDesconto"
 							   th:field="*{valorDesconto}" data:valor="${valorDesconto}" th:disabled="${venda.salvarProibido}"/>
 					</div>
@@ -108,7 +109,7 @@
 			<div class="row">
 				<div class="form-group  col-lg-12">
 					<ul class="nav nav-tabs  js-abas-venda">
-						<li role="presentation" class="active"><a href="#cervejas">Cervejas</a></li>
+						<li role="presentation" class="active"><a href="#cervejas">Produtos</a></li>
 						<li role="presentation"><a href="#entrega">Entrega</a></li>
 					</ul>
 				</div>
@@ -120,12 +121,43 @@
 					<div class="row">
 						<div class="form-group  col-lg-12">
 							<input type="text" class="form-control  js-sku-nome-cerveja-input" id="cerveja"
-								   placeholder="Pesquise e adicione o produto pelo SKU ou nome" autofocus="autofocus"
+								   placeholder="Pesquise e adicione o produto pelo codigo ou nome" autofocus="autofocus"
 								   data:url="@{/cervejas}" th:disabled="${venda.salvarProibido}"/>
 						</div>
 					</div>
 
-					<div class="bw-tabela-cervejas  js-tabela-cervejas-container" data:valor="${valorTotalItens}">
+					<div class="bw-tabela-cervejas" js-tabela-cervejas-container>
+
+
+						<!--	<div class="bw-tabela-item">
+                                <div class="bw-tabela-item__coluna bw-tabela-item__coluna--foto">
+
+                                    <img th:src="@{/fotos/thumbnail.47e850b7-b093-43eb-b616-1b75349a2d03_Cascata Abandonos.png}" class="img-responsive"/>
+
+                                </div>
+
+                                <div class="bw-tabela-item__coluna bw-tabela-item__coluna--detalhes">
+                                    <span class="bw-tabela-cerveja-nome">Testes</span>
+                                    <span class="label label-default">testeee</span>
+                                    <span class="bw-tabela-origem">Importada</span>
+                                </div>
+
+                                <div class="bw-tabela-item__coluna bw-tabela-item__coluna--valores">
+                                    <div class="bw-tabela-cerveja-valor-pequeno">
+                                        <input type="text" th:maxlength="6" class="bw-tabela-cerveja-campo-quantidade" value="1"/>
+
+                                     </div>
+                                    <div class="bw-tabela-cerveja-valor-grande">X$2</div>
+                                </div>
+
+
+
+                            </div>-->
+
+
+					</div>
+					<input type="hidden" id="valorTotalItens"  th:value="${venda.valorTotal}">
+					<div class="bw-tabela-cervejas valortotal  js-tabela-cervejas-container"  data:valor="${valorTotalItens}">
 						<th:block th:replace="venda/TabelaItensVenda"/>
 					</div>
 				</div>
@@ -155,14 +187,13 @@
 			<div class="row" style="clear: both" th:if="${venda.salvarPermitido}">
 				<div class="col-lg-12">
 					<div class="btn-group">
-						<button type="submit" class="btn  btn-primary  js-submit-btn" data:acao="salvar">Salvar</button>
+						<button type="submit" class="btn  btn-primary  js-submit-btn"  id="salvar"  data:acao="salvar">Salvar</button>
 						<button type="button" class="btn  btn-primary  dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</button>
-s
-						<ul class="dropdown-menu">
 
-							<li><a href="#" class="js-submit-btn" data:acao="emitir">Salvar e emitir</a></li>
+						<ul class="dropdown-menu">
+							<li><a href="#" class="js-submit-btn" id="salvar" data:acao="emitir">Salvar e emitir</a></li>
 							<li><a href="#" class="js-submit-btn" data:acao="enviarEmail">Salvar e enviar por e-mail</a></li>
 						</ul>
 					</div>

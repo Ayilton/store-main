@@ -6,14 +6,21 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.yitech.store.model.Cerveja;
+import com.yitech.store.model.ItemVenda;
+import com.yitech.store.session.TabelaItensVenda;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yitech.store.storage.FotoStorage;
@@ -27,15 +34,13 @@ public class FotoStorageLocal implements FotoStorage {
 
 	private static final Logger logger = LoggerFactory.getLogger(FotoStorageLocal.class);
 	private static final String THUMBNAIL_PREFIX = "thumbnail.";
-	
+
 	@Value("${store.foto-storage-local.local}")
-//	@Value("${store}")
 	private Path local;
-	
+
 	@Value("${store.foto-storage-local.url-base}")
-//	@Value("${store}")
 	private String urlBase;
-	
+
 	@Override
 	public String salvar(MultipartFile[] files) {
 		String novoNome = null;
@@ -48,19 +53,16 @@ public class FotoStorageLocal implements FotoStorage {
 				throw new RuntimeException("Erro salvando a foto", e);
 			}
 		}
-		
+
 		try {
-			assert novoNome != null;
 			Thumbnails.of(this.local.resolve(novoNome).toString()).size(40, 68).toFiles(Rename.PREFIX_DOT_THUMBNAIL);
 		} catch (IOException e) {
 			throw new RuntimeException("Erro gerando thumbnail", e);
 		}
-		
+
 		return novoNome;
 	}
 
-
-	
 	@Override
 	public byte[] recuperar(String nome) {
 		try {
@@ -70,15 +72,10 @@ public class FotoStorageLocal implements FotoStorage {
 		}
 	}
 
-
-
-
-	
 	@Override
-	public byte[] recuperarThumbnail(String fotoProduto) {
-		return recuperar(THUMBNAIL_PREFIX + fotoProduto);
+	public byte[] recuperarThumbnail(String fotoCerveja) {
+		return recuperar(THUMBNAIL_PREFIX + fotoCerveja);
 	}
-	
 
 	@Override
 	public void excluir(String foto) {
@@ -88,9 +85,9 @@ public class FotoStorageLocal implements FotoStorage {
 		} catch (IOException e) {
 			logger.warn(String.format("Erro apagando foto '%s'. Mensagem: %s", foto, e.getMessage()));
 		}
-		
+
 	}
-	
+
 	@Override
 	public String getUrl(String foto) {
 		return urlBase + foto;
@@ -100,7 +97,7 @@ public class FotoStorageLocal implements FotoStorage {
 	private void criarPastas() {
 		try {
 			Files.createDirectories(this.local);
-			
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("Pastas criadas para salvar fotos.");
 				logger.debug("Pasta default: " + this.local.toAbsolutePath());
@@ -109,5 +106,5 @@ public class FotoStorageLocal implements FotoStorage {
 			throw new RuntimeException("Erro criando pasta para salvar foto", e);
 		}
 	}
-	
+
 }

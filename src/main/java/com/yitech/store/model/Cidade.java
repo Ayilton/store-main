@@ -25,10 +25,10 @@ public class Cidade implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	@NotBlank(message = "Nome é obrigatório")
 	private String nome;
-	
+
 	@NotNull(message = "Estado é obrigatório")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "codigo_estado")
@@ -58,11 +58,11 @@ public class Cidade implements Serializable {
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
-	
+
 	public boolean temEstado() {
 		return estado != null;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

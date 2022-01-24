@@ -2,7 +2,7 @@ Brewer = Brewer || {};
 
 Brewer.Autocomplete = (function() {
 
-	function Autocomplete() {
+	/**function Autocomplete() {
 		this.skuOuNomeInput = $('.js-sku-nome-cerveja-input');
 		var htmlTemplateAutocomplete = $('#template-autocomplete-cerveja').html();
 		this.template = Handlebars.compile(htmlTemplateAutocomplete);
@@ -10,11 +10,11 @@ Brewer.Autocomplete = (function() {
 		this.on = this.emitter.on.bind(this.emitter);
 	}
 
-	Autocomplete.prototype.iniciar = function() {
+	 Autocomplete.prototype.iniciar = function() {
 		var options = {
-				url: function(skuOuNome) {
-					return `/cervejas/filtro/${skuOuNome}`;
-				},
+			url: function(skuOuNome) {
+				return this.skuOuNomeInput.data('url') + '?skuOuNome=' + skuOuNome;
+			}.bind(this),
 			getValue: 'nome',
 			minCharNumber: 3,
 			requestDelay: 300,
@@ -33,17 +33,69 @@ Brewer.Autocomplete = (function() {
 		this.skuOuNomeInput.easyAutocomplete(options);
 	}
 
-	function onItemSelecionado() {
+	 function onItemSelecionado() {
 		this.emitter.trigger('item-selecionado', this.skuOuNomeInput.getSelectedItemData());
 		this.skuOuNomeInput.val('');
 		this.skuOuNomeInput.focus();
 	}
 
-	function template(nome, cerveja) {
+	 function template(nome, cerveja) {
 		cerveja.valorFormatado = Brewer.formatarMoeda(cerveja.valor);
 		return this.template(cerveja);
 	}
 
+	 return Autocomplete
+	 **/
+
+	function Autocomplete() {
+		this.skuOuNomeInput=$('.js-sku-nome-cerveja-input');
+		var  htmlTemplateAutoComplete =$('#template-autocomplete-cerveja').html();
+		this.template = Handlebars.compile(htmlTemplateAutoComplete);
+		this.emitter =$({});
+		this.on =this.emitter.on.bind(this.emitter);
+	}
+	Autocomplete.prototype.iniciar = function () {
+		var options={
+
+			url:function (skuOuNome) {
+				return '/cervejas?skuOuNome='+skuOuNome;
+				//return this.skuOuNomeInput.data('url')+'?skuOuNome='+skuOuNome;
+			},
+			getValue:'nome',
+			minCharNumber: 1,
+			ajaxSettings:{
+				contentType:'application/json'
+			},
+			template:{
+
+				type:'custom',
+				method:function (nome,cerveja) {
+
+					return this.template(cerveja);
+
+				}.bind(this)
+			},
+			list:{
+				onChooseEvent:function () {
+
+					this.emitter.trigger('item-selecionado',this.skuOuNomeInput.getSelectedItemData());
+					this.skuOuNomeInput.val('');
+					this.skuOuNomeInput.focus();
+					console.log('Selecionou um item');
+
+				}.bind(this)
+			}
+
+		};
+
+		this.skuOuNomeInput.easyAutocomplete(options);
+
+	}
+
 	return Autocomplete
 
+
+
+
 }());
+

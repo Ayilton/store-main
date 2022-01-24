@@ -5,9 +5,9 @@ public class VendaOrigem {
 	private String mes;
 	private Integer totalNacional;
 	private Integer totalInternacional;
-	
+
 	public VendaOrigem() {
-		
+
 	}
 
 	public VendaOrigem(String mes, Integer totalNacional, Integer totalInternacional) {
@@ -40,5 +40,5 @@ public class VendaOrigem {
 		this.mes = mes;
 	}
 
-	
+
 }

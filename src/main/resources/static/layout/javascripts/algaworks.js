@@ -12,9 +12,9 @@ AW.onSearchModalShowRequest = function(event) {
 
   $('.js-search-modal').fadeIn('slow');
   $('body').addClass('aw-no-scroll');
-  
+
   $('.js-search-modal-input').val('').select();
-  
+
 };
 
 AW.onSearchModalCloseRequest = function(event) {
@@ -25,13 +25,13 @@ AW.onSearchModalCloseRequest = function(event) {
 };
 
 //AW.onFormLoadingSubmit = function(event) {
-  //event.preventDefault();
+//event.preventDefault();
 
-  //AW.showLoadingComponent();
+//AW.showLoadingComponent();
 
-  //setTimeout(function() {
-  //  AW.hideLoadingComponent();
-  //}, 2000);
+//setTimeout(function() {
+//  AW.hideLoadingComponent();
+//}, 2000);
 //};
 
 AW.showLoadingComponent = function() {
@@ -43,7 +43,7 @@ AW.hideLoadingComponent = function() {
 };
 
 AW.initStickyTableHeaders = function() {
-  if ($(window).width() >= 992) { 
+  if ($(window).width() >= 992) {
     var stickyRef = $('.js-sticky-reference');
     var stickyTable = $('.js-sticky-table');
 
@@ -74,10 +74,10 @@ $(function() {
 
   AW.initMenu();
   AW.initStickyTableHeaders();
-  
+
   // Enable Bootstrap tooltip
   $('.js-tooltip').tooltip();
-  
+
   // Bind events
   $('.js-sidebar-toggle').bind('click', AW.onSidebarToggleRequest);
   $('.js-search-modal-trigger-show').bind('click', AW.onSearchModalShowRequest);
